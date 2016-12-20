@@ -18,11 +18,9 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+drone_drone" -p=${DOCKER_PASSWORD} quay.io
-      - docker tag drone quay.io/ukhomeofficedigital/drone:latest
-      - docker tag drone quay.io/ukhomeofficedigital/drone:${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/drone:latest
-      - docker push quay.io/ukhomeofficedigital/drone:${DRONE_COMMIT_SHA}
+      - docker login -u="${DOCKER_USERNAME}" -p=${DOCKER_PASSWORD} hub.docker.com
+      - docker tag drone hub.docker.com/forbesj/drone:${DRONE_COMMIT_SHA}
+      - docker push hub.docker.com/forbesj/ubuntu:${DRONE_COMMIT_SHA}
     when:
       event: push
       branch: master
@@ -32,9 +30,9 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+drone_drone" -p=${DOCKER_PASSWORD} quay.io
-      - docker tag drone quay.io/ukhomeofficedigital/drone:${DRONE_TAG}
-      - docker push quay.io/ukhomeofficedigital/drone:${DRONE_TAG}
+      - docker login -u="${DOCKER_ARTIFACTORY_USERNAME}" -p=${DOCKER_ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DNS}:5001
+      - docker tag drone ${ARTIFACTORY_DNS}:5001/drone:${DRONE_COMMIT_SHA}
+      - docker push ${ARTIFACTORY_DNS}:5001/drone:${DRONE_COMMIT_SHA}
     when:
       event: tag
 
